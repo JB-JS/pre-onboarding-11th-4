@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from '@emotion/styled';
+import Search from './components/Search';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Root>
+      <div>
+        <h2>
+          국내 모든 임상시험 검색하고
+          <br />
+          온라인으로 참여하기
+        </h2>
+        <Search />
+      </div>
+    </Root>
   );
 }
+
+const Root = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  background: #e0f1f9;
+
+  h2 {
+    margin-bottom: 40px;
+    font-size: 2.125rem;
+    line-height: 1.6;
+  }
+`;
 
 export default App;
