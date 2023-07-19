@@ -18,6 +18,8 @@ $ npm install
 $ npm start
 ```
 
+배포링크: https://pre-onboarding-11th-4.vercel.app/
+
 ## 사용 기술
 
 - 언어: `typescript`
