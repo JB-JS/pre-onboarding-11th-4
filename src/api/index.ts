@@ -35,5 +35,6 @@ export const getSearch = async (q: string): Promise<any> => {
     return res;
   } catch (error) {
     console.log(error);
+    return Promise.reject(error);
   }
 };

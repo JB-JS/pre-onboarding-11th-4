@@ -16,7 +16,8 @@ const Search = () => {
   const [isFocus, setIsFocus] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [searchList, setSearchList] = useState<SearchItemType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const { debouncedValue, initDebounce } = useDebounce(keyword, 600);
 
   const onInputFocus = () => {
@@ -35,15 +36,11 @@ const Search = () => {
   useEffect(() => {
     if (!keyword || !debouncedValue) return;
 
-    // setIsLoading(true);
-
     const cacheInstance = new CacheLocalStorage();
 
     const cache = cacheInstance.get(keyword);
 
     if (cache) {
-      console.log(cache.expire < Date.now());
-
       if (cache.expire < Date.now()) {
         cacheInstance.remove(keyword);
       } else if (cache.expire > Date.now()) {
@@ -53,26 +50,36 @@ const Search = () => {
       }
     }
     (async () => {
-      const res = await getSearch(keyword);
+      try {
+        const res = await getSearch(keyword);
 
-      if (res.status !== 200) return;
+        if (res.status !== 200) return;
 
-      // setIsLoading(false);
+        const searchList = res.data.slice(0, 7).map((item: SearchItemType) => ({
+          ...item,
+          sickNm: item.sickNm.split(new RegExp(`(${keyword})`, 'g')),
+        }));
 
-      const searchList = res.data.slice(0, 7).map((item: SearchItemType) => ({
-        ...item,
-        sickNm: item.sickNm.split(new RegExp(`(${keyword})`, 'g')),
-      }));
+        cacheInstance.set(keyword, searchList);
 
-      cacheInstance.set(keyword, searchList);
-
-      setSearchList(searchList);
-      initDebounce();
+        setSearchList(searchList);
+        initDebounce();
+      } catch (error: any) {
+        setError(true);
+        setErrorMsg(error.message);
+      }
     })();
   }, [keyword, debouncedValue, initDebounce]);
 
+  if (error) return <h1>{errorMsg}</h1>;
+
   return (
     <Root>
+      <h2>
+        국내 모든 임상시험 검색하고
+        <br />
+        온라인으로 참여하기
+      </h2>
       <InputContainer className={isFocus ? 'focused' : ''}>
         <input
           type="text"
@@ -86,7 +93,7 @@ const Search = () => {
           <Icon name="Search" />
         </button>
       </InputContainer>
-      <SearchList items={searchList} keyword={keyword} isLoading={isLoading} />
+      <SearchList items={searchList} keyword={keyword} />
     </Root>
   );
 };

@@ -4,19 +4,15 @@ import SearchItem from './SearchItem';
 
 export default function SearchList({
   items,
-  isLoading,
   keyword,
 }: {
   items: SearchItemType[];
-  isLoading: boolean;
   keyword: string;
 }) {
   return (
     <Root>
       {!keyword ? (
         <Info>검색어 없음</Info>
-      ) : isLoading ? (
-        <Info>검색중...</Info>
       ) : (
         <>
           <SubTitle>추천 검색어</SubTitle>

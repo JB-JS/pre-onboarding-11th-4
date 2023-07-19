@@ -15,11 +15,7 @@ export default function SearchItem({
   return (
     <Root tabIndex={tabIndex}>
       <Icon name="Search" opts={{ width: '15px', height: '15px' }} />
-      <div
-        onFocus={() => {
-          console.log('focus');
-        }}
-      >
+      <div>
         {item.sickNm.map((text: string, idx: number) => (
           <Fragment key={idx}>
             {keyword === text ? <Mark>{text}</Mark> : text}
